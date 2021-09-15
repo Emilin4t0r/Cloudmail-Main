@@ -11,7 +11,9 @@ public class SpeederTilt : MonoBehaviour {
         speeder = parent.GetComponent<Speeder3D>();
     }
     void Update() {
-        transform.position = parent.transform.position;
+        Vector3 newPos = Vector3.MoveTowards(transform.position, parent.transform.position, 10);
+        transform.position = newPos;
+
 
         if (!ControlsManager.instance.isDocked) {
             tiltAmt = speeder.Xcoord * tiltMultiplier;
