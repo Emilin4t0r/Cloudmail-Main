@@ -10,7 +10,7 @@ public class SpeederTilt : MonoBehaviour {
     private void Start() {
         speeder = parent.GetComponent<Speeder3D>();
     }
-    void FixedUpdate() {
+    void Update() {
         transform.position = parent.transform.position;
 
         if (!ControlsManager.instance.isDocked) {

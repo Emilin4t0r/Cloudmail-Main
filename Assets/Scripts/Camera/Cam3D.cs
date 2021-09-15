@@ -15,7 +15,7 @@ public class Cam3D : MonoBehaviour {
 	}
 
 
-	void FixedUpdate() {
+	void Update() {
 		transform.rotation = Quaternion.LookRotation(target.position - transform.position, Vector3.up);
 
 		// Define a target position above and behind the target transform

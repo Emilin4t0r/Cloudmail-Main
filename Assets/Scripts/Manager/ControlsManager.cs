@@ -11,6 +11,7 @@ public class ControlsManager : MonoBehaviour {
     FPSControl plrCtrl;
     Speeder3D spdrCtrl;
     public SpeederTilt sTilt;
+    public CursorLockMode cursorMode;
 
     Vector3 dockingPoint;
     Quaternion dockingRot;
@@ -40,8 +41,7 @@ public class ControlsManager : MonoBehaviour {
             isDocked = false;
             controlEntity = ControlEntity.Ship;
             InteractRay.instance.ResetLookingAt();
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            ChangeCursorLockState(CursorLockMode.None);
         } else if (entity == ControlEntity.Player) {
             plrCtrl.enabled = true;
             spdrCtrl.enabled = false;
@@ -49,8 +49,17 @@ public class ControlsManager : MonoBehaviour {
             plrCam.SetActive(true);
             compass.SetActive(false);
             controlEntity = ControlEntity.Player;
-            Cursor.lockState = CursorLockMode.Locked;
+            ChangeCursorLockState(CursorLockMode.Locked);
+        }
+    }
+
+    void ChangeCursorLockState(CursorLockMode mode) {
+        Cursor.lockState = mode;
+        cursorMode = mode;
+        if (mode == CursorLockMode.Locked) {
             Cursor.visible = false;
+        } else {
+            Cursor.visible = true;
         }
     }
 

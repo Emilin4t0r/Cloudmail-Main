@@ -25,10 +25,13 @@ public class FPSControl : MonoBehaviour {
     void Update() {
         LookRotations();
         Jumping();
-    }
-    private void FixedUpdate() {
         Movement();
     }
+
+    private void FixedUpdate() {
+        //Movement();
+    }
+
 
     void LookRotations() {
         yRot += Input.GetAxis("Mouse X") * sensitivity;
@@ -45,12 +48,12 @@ public class FPSControl : MonoBehaviour {
         float zMove;       
 
         if (CInput.HoldKey(CInput.forward)) {
-            zMove = 1 * walkSpeed / 50;
+            zMove = 1 * walkSpeed / 50;           
         } else if (CInput.HoldKey(CInput.backward)) {
             zMove = -1 * walkSpeed / 50;
         } else {
             zMove = 0;
-        }
+        }        
 
         if (CInput.HoldKey(CInput.right)) {
             xMove = 1 * walkSpeed / 50;
@@ -58,11 +61,14 @@ public class FPSControl : MonoBehaviour {
             xMove = -1 * walkSpeed / 50;
         } else {
             xMove = 0;
-        }
+        }        
 
         if (CInput.HoldKey(CInput.boost)) { //sprinting
             zMove *= runMultip;
         }
+
+        zMove *= Time.deltaTime;
+        xMove *= Time.deltaTime;
 
         transform.Translate(new Vector3(xMove, 0, zMove)); //move the transform
     }
