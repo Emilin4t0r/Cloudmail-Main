@@ -7,7 +7,7 @@ public class ControlsManager : MonoBehaviour {
     public enum ControlEntity { Ship, Player };
     public ControlEntity controlEntity;
 
-    public GameObject player, speeder, plrCam, shipCam, compass;
+    public GameObject player, speeder, compass;
     FPSControl plrCtrl;
     Speeder3D spdrCtrl;
     public SpeederTilt sTilt;
@@ -35,8 +35,7 @@ public class ControlsManager : MonoBehaviour {
         if (entity == ControlEntity.Ship) {
             plrCtrl.enabled = false;
             spdrCtrl.enabled = true;
-            plrCam.SetActive(false);
-            shipCam.SetActive(true);
+            CameraManager.instance.SetCamParentToShip(true);
             compass.SetActive(true);
             isDocked = false;
             controlEntity = ControlEntity.Ship;
@@ -45,8 +44,7 @@ public class ControlsManager : MonoBehaviour {
         } else if (entity == ControlEntity.Player) {
             plrCtrl.enabled = true;
             spdrCtrl.enabled = false;
-            shipCam.SetActive(false);
-            plrCam.SetActive(true);
+            CameraManager.instance.SetCamParentToShip(false);
             compass.SetActive(false);
             controlEntity = ControlEntity.Player;
             ChangeCursorLockState(CursorLockMode.Locked);
