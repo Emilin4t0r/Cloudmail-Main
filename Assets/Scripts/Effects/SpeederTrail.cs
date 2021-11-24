@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpeederTrail : MonoBehaviour {
     TrailRenderer trail;
+    public Speeder3D spdr3DScript;
     public SpeederTilt spdrTiltScript;
     void Start() {
         trail = transform.GetComponent<TrailRenderer>();
@@ -12,11 +13,11 @@ public class SpeederTrail : MonoBehaviour {
 
     void FixedUpdate() {
         if (!trail.emitting) {
-            if (Mathf.Abs(spdrTiltScript.tiltAmt) >= 40) {
+            if (spdr3DScript.moveSpeed >= 20 && Mathf.Abs(spdrTiltScript.tiltAmt) >= 40) {
                 trail.emitting = true;
             }
         } else {
-            if (Mathf.Abs(spdrTiltScript.tiltAmt) < 40) {
+            if (spdr3DScript.moveSpeed < 18 || Mathf.Abs(spdrTiltScript.tiltAmt) < 40) {
                 trail.emitting = false;
             }
         }

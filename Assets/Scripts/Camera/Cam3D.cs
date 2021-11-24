@@ -9,7 +9,7 @@ public class Cam3D : MonoBehaviour {
 	public float smoothTime = 0.3f;
 	private float origSmoothTime;
 	private Vector3 velocity = Vector3.zero;
-
+	
 	void Start() {
 		origSmoothTime = smoothTime;
 	}
