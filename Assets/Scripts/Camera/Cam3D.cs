@@ -7,7 +7,7 @@ public class Cam3D : MonoBehaviour {
 
 	public Transform target;
 	public float smoothTime = 0.3f;
-	private Vector3 velocity = Vector3.zero;
+	public Speeder3D spdr;
 
     void LateUpdate() {
 		transform.rotation = Quaternion.LookRotation(target.position - transform.position, Vector3.up);
@@ -15,7 +15,10 @@ public class Cam3D : MonoBehaviour {
 		// Define a target position above and behind the target transform
 		Vector3 targetPosition = target.TransformPoint(new Vector3(0, 2f, -10f));
 
+		// Smoothing time relative to speeder speed (needs to be 0.08 when speed is 20)
+		smoothTime = spdr.moveSpeed / 250f;
+
 		// Smoothly move the camera towards that target position
-		transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);		
+		transform.position = Vector3.MoveTowards(transform.position, targetPosition, smoothTime);
 	}
 }

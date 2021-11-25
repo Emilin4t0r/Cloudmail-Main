@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
-    public GameObject cam, plrCamParent, spdrCamParent, interactRay;
+    public GameObject cam, plrCamParent, spdrCamParent, interactRay, spdr;
     public Vector3 plrCamPos, spdrCamPos;
     public Cam3D cam3Dscript;
     public static CameraManager instance;
@@ -18,10 +18,11 @@ public class CameraManager : MonoBehaviour {
             cam3Dscript.enabled = true;
             interactRay.SetActive(false);
         } else {
+            spdrCamParent.transform.position = spdr.transform.position;
             cam.transform.parent = plrCamParent.transform;
             cam.transform.localPosition = plrCamPos;
             cam3Dscript.enabled = false;
-            interactRay.SetActive(true);
+            interactRay.SetActive(true);           
         }
     }
 }
