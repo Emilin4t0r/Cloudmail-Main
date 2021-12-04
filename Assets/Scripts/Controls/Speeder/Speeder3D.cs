@@ -58,8 +58,7 @@ public class Speeder3D : MonoBehaviour
 			float y = transform.eulerAngles.y;                  // 	> Set Z rotation to 0
 			transform.localEulerAngles = new Vector3(x, y, 0);  // /
 
-			RotateShipX();
-			RotateShipY();
+			RotateShip();
 
 			//Acceleration for moving forward/backward
 			float moveTowards = 0;
@@ -122,14 +121,15 @@ public class Speeder3D : MonoBehaviour
 		}
 	}
 
-    void RotateShipX() {
-		transform.Rotate(Vector3.up * (Xcoord * Time.deltaTime) * sensitivity);
-	}
-	void RotateShipY() {
+	void RotateShip() {
+		Quaternion newRotX = Quaternion.Euler(Vector3.up * (Xcoord * Time.deltaTime));
+		Quaternion newRotY = Quaternion.Euler(Vector3.left * (Ycoord * Time.deltaTime));
 		float angle = transform.localEulerAngles.x;
 		angle = (angle > 180) ? angle - 360 : angle;
 		if ((angle > -70f && Ycoord >= 0) || (angle < 70f && Ycoord <= 0))
-			transform.Rotate(Vector3.left * (Ycoord * Time.deltaTime) * sensitivity);
+			transform.rotation = Quaternion.RotateTowards(transform.rotation, transform.rotation * newRotX * newRotY, sensitivity);
+		else
+			transform.rotation = Quaternion.RotateTowards(transform.rotation, transform.rotation * newRotX, sensitivity);
 	}
 
 	private void OnTriggerEnter(Collider other) {
