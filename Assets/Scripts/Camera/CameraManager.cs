@@ -20,7 +20,7 @@ public class CameraManager : MonoBehaviour {
         } else {
             spdrCamParent.transform.position = spdr.transform.position;
             cam.transform.parent = plrCamParent.transform;
-            cam.transform.localPosition = plrCamPos;
+            cam.transform.localPosition = plrCamPos;            
             cam3Dscript.enabled = false;
             interactRay.SetActive(true);           
         }

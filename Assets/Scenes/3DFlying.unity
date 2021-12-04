@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 9768.902, g: 12667.992, b: 14229.266, a: 1}
+  m_IndirectSpecularColor: {r: 9768.855, g: 12667.9375, b: 14229.016, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1864,7 +1864,7 @@ PrefabInstance:
       objectReference: {fileID: 917390579}
     - target: {fileID: 90585277, guid: c024d7cce5abbf4428f0f86aea569ff9, type: 3}
       propertyPath: smoothTime
-      value: 0.08
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 367767640, guid: c024d7cce5abbf4428f0f86aea569ff9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7382,6 +7382,30 @@ PrefabInstance:
       propertyPath: maxSpeedB
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 43713324, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: maxSpeedF
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 43713324, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: turboSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 43713324, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: turboAccSpd
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 43713324, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: notMovingAccSpd
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 43713324, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: whenMovingAccSpd
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 43713324, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: accelerationSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1509999724, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
       propertyPath: m_Emitting
       value: 0
@@ -7429,6 +7453,18 @@ PrefabInstance:
     - target: {fileID: 4471757459525948344, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471757459525948347, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471757459525948347, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471757459525948347, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4471757459525948350, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
       propertyPath: m_Name
