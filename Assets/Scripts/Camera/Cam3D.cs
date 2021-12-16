@@ -8,8 +8,9 @@ public class Cam3D : MonoBehaviour {
     public Transform target;
     public float smoothTime = 0.3f;
     Vector3 velocity = Vector3.zero;
+	Vector3 oldPos = Vector3.zero;
     
-    void Update() {
+    void FixedUpdate() {
 		transform.rotation = Quaternion.LookRotation(target.position - transform.position, Vector3.up);
 
 		// Define a target position above and behind the target transform

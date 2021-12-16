@@ -59,16 +59,12 @@ public class Speeder3D : MonoBehaviour
 			float y = transform.eulerAngles.y;                  // 	> Set Z rotation to 0
 			transform.localEulerAngles = new Vector3(x, y, 0);  // /
 
-			RotateShip();
 
 			//Acceleration for moving forward/backward
 			float moveTowards = 0;
 			float changeRatePerSecond = 1 / accelerationSpeed * Time.deltaTime;
 
-			if (CInput.HoldKey(CInput.backward)) {
-				moveTowards = -maxSpeedB;
-				accelerationSpeed = whenMovingAccSpd;
-			} else if (CInput.HoldKey(CInput.forward)) {
+			if (CInput.HoldKey(CInput.forward)) {
 				moveTowards = maxSpeedF;
 				accelerationSpeed = whenMovingAccSpd;
 			} else {
@@ -84,7 +80,7 @@ public class Speeder3D : MonoBehaviour
             }
 
 			//Vector3 movePos = new Vector3(0, 0, moveSpeed * Time.deltaTime);
-			transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * moveSpeed, Time.deltaTime * moveSmoothingFactor);
+			//transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * moveSpeed, Time.deltaTime * moveSmoothingFactor);
 
 			if (rb.velocity.magnitude < .01 && !hasHitWall) {
 				rb.velocity = Vector3.zero;
@@ -121,9 +117,14 @@ public class Speeder3D : MonoBehaviour
 				currentRegion = region;
 			}
 		}
+
+		//Ship rotation calculations and applying
+		RotateShip();
+		transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * moveSpeed, Time.deltaTime * moveSmoothingFactor);
 	}
 
 	void RotateShip() {
+		//SOME FUCKERY GOING ON HERE???
 		Quaternion newRotX = Quaternion.Euler(Vector3.up * (Xcoord * Time.deltaTime));
 		Quaternion newRotY = Quaternion.Euler(Vector3.left * (Ycoord * Time.deltaTime));
 		float angle = transform.localEulerAngles.x;

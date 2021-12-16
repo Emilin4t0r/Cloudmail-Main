@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Preload : MonoBehaviour {
     private void Start() {
+        Application.targetFrameRate = 144;
         Invoke("LoadNext", 0.2f);
     }
 
