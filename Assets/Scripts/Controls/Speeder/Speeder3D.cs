@@ -11,6 +11,7 @@ public class Speeder3D : MonoBehaviour
 	public float turboSpeed;
 	public float turboCamShake;
 	public float sensitivity;
+	public float moveSmoothingFactor;
 	public Rigidbody rb;
 
 	public float accelerationSpeed;
@@ -82,7 +83,8 @@ public class Speeder3D : MonoBehaviour
 				StartCoroutine(Boost());
             }
 
-			transform.Translate(0, 0, moveSpeed * Time.deltaTime);
+			//Vector3 movePos = new Vector3(0, 0, moveSpeed * Time.deltaTime);
+			transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * moveSpeed, Time.deltaTime * moveSmoothingFactor);
 
 			if (rb.velocity.magnitude < .01 && !hasHitWall) {
 				rb.velocity = Vector3.zero;

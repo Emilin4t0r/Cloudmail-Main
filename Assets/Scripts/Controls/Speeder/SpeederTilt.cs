@@ -5,15 +5,11 @@ using UnityEngine;
 public class SpeederTilt : MonoBehaviour {
     public float tiltMultiplier;
     public float tiltAmt;
-    public GameObject parent;
     Speeder3D speeder;
     private void Start() {
-        speeder = parent.GetComponent<Speeder3D>();
+        speeder = transform.parent.GetComponent<Speeder3D>();
     }
     void Update() {
-        Vector3 newPos = Vector3.MoveTowards(transform.position, parent.transform.position, 10);
-        transform.position = newPos;
-
 
         if (!ControlsManager.instance.isDocked) {
             tiltAmt = speeder.Xcoord * tiltMultiplier;
@@ -21,8 +17,9 @@ public class SpeederTilt : MonoBehaviour {
                 tiltAmt = ControlsManager.instance.dDist * 10;
             }
         }
-        float x = parent.transform.localEulerAngles.x;
-        float y = parent.transform.localEulerAngles.y;
+
+        float x = 0;
+        float y = 0;
         transform.localEulerAngles = new Vector3(x, y, -tiltAmt);
     }
 }
