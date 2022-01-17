@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 10496.383, g: 14743.992, b: 20212.75, a: 1}
+  m_IndirectSpecularColor: {r: 10501.418, g: 14734.445, b: 20230.281, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7036,12 +7036,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 43713324, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: bounceFactor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 43713324, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
       propertyPath: moveSmoothingFactor
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1509999724, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
       propertyPath: m_Emitting
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471757459525948325, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: m_Height
+      value: 3.291001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471757459525948325, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: m_Center.x
+      value: -8.4553793e-16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471757459525948325, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: m_Center.z
+      value: 0.1905005
       objectReference: {fileID: 0}
     - target: {fileID: 4471757459525948344, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
       propertyPath: m_RootOrder
@@ -7086,6 +7102,14 @@ PrefabInstance:
     - target: {fileID: 4471757459525948344, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471757459525948347, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471757459525948347, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4471757459525948350, guid: 07b9d985c41d6dd4b87d187617f8f023, type: 3}
       propertyPath: m_Name

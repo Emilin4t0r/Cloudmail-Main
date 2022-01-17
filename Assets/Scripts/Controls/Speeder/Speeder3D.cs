@@ -3,195 +3,199 @@ using System.Collections.Generic;
 using UnityEngine;
 using CustomInput;
 
-public class Speeder3D : MonoBehaviour
-{
-	public float moveSpeed;	
-	public float maxSpeedF;
-	public float maxSpeedB;
-	public float turboSpeed;
-	public float turboCamShake;
-	public float sensitivity;
-	public float moveSmoothingFactor;
-	public Rigidbody rb;
+public class Speeder3D : MonoBehaviour {
+    public float moveSpeed;
+    public float maxSpeedF;
+    public float maxSpeedB;
+    public float turboSpeed;
+    public float turboCamShake;
+    public float sensitivity;
+    public float moveSmoothingFactor;
+    public float bounceFactor = 5.5f;
+    public Rigidbody rb;
 
-	public float accelerationSpeed;
-	public float turboAccSpd, whenMovingAccSpd, notMovingAccSpd;
-	public float turboDuration = 5;
-	float normalMaxSpeedF;
+    public float accelerationSpeed;
+    public float turboAccSpd, whenMovingAccSpd, notMovingAccSpd;
+    public float turboDuration = 5;
+    float normalMaxSpeedF;
 
-	private int[] center = new int[2];
-	private float blockX;
-	private float mouseX;
-	private float blockY;
-	private float mouseY;
-	public float Xcoord;
-	public float Ycoord;
+    private int[] center = new int[2];
+    private float blockX;
+    private float mouseX;
+    private float blockY;
+    private float mouseY;
+    public float Xcoord;
+    public float Ycoord;
 
-	public GameObject player;
-	public bool canMove;
-	public bool inDockArea;
-	bool hasHitWall;
-	Vector3 bounceDir;
-	int regionLayer = 1 << 7;
-	GameObject currentRegion;
+    public GameObject player;
+    public bool canMove;
+    public bool inDockArea;
+    bool hasHitWall;
+    Vector3 bounceDir;
+    bool turningFromBounce;
+    int regionLayer = 1 << 7;
+    GameObject currentRegion;
 
-	void Start() {
-		center[0] = Screen.width / 2;
-		center[1] = Screen.height / 2;
+    void Start() {
+        center[0] = Screen.width / 2;
+        center[1] = Screen.height / 2;
 
-		canMove = true;
-		normalMaxSpeedF = maxSpeedF; // Store normal speed & acceleration values
-		accelerationSpeed = 0;
-	}
+        canMove = true;
+        normalMaxSpeedF = maxSpeedF; // Store normal speed & acceleration values
+        accelerationSpeed = 0;
+    }
 
-	void Update() {
+    void Update() {
 
-		if (canMove) {
+        if (canMove) {
 
-			blockX = Screen.width / 100f;
-			mouseX = Input.mousePosition.x - center[0];
-			Xcoord = mouseX / blockX;
-			blockY = Screen.height / 100f;
-			mouseY = Input.mousePosition.y - center[1];
-			Ycoord = mouseY / blockY;
+            blockX = Screen.width / 100f;
+            mouseX = Input.mousePosition.x - center[0];
+            Xcoord = mouseX / blockX;
+            blockY = Screen.height / 100f;
+            mouseY = Input.mousePosition.y - center[1];
+            Ycoord = mouseY / blockY;
 
-			float x = transform.eulerAngles.x;                  // \
-			float y = transform.eulerAngles.y;                  // 	> Set Z rotation to 0
-			transform.localEulerAngles = new Vector3(x, y, 0);  // /
+            float x = transform.eulerAngles.x;                  // \
+            float y = transform.eulerAngles.y;                  // 	> Set Z rotation to 0
+            transform.localEulerAngles = new Vector3(x, y, 0);  // /
 
 
-			//Acceleration for moving forward/backward
-			float moveTowards = 0;
-			float changeRatePerSecond = 1 / accelerationSpeed * Time.deltaTime;
+            //Acceleration for moving forward/backward
+            float moveTowards = 0;
+            float changeRatePerSecond = 1 / accelerationSpeed * Time.deltaTime;
 
-			if (CInput.HoldKey(CInput.forward)) {
-				moveTowards = maxSpeedF;
-				accelerationSpeed = whenMovingAccSpd;
-			} else {
-				accelerationSpeed = notMovingAccSpd;
-			}
-			
-			changeRatePerSecond *= 50;
-			moveSpeed = Mathf.MoveTowards(moveSpeed, moveTowards, changeRatePerSecond);
-
-			//Boost
-			if (CInput.KeyDown(CInput.boost)) {
-				StartCoroutine(Boost());
+            if (CInput.HoldKey(CInput.forward) && !turningFromBounce) {
+                moveTowards = maxSpeedF;
+                accelerationSpeed = whenMovingAccSpd;
+            } else {
+                accelerationSpeed = notMovingAccSpd;
             }
 
-			//Vector3 movePos = new Vector3(0, 0, moveSpeed * Time.deltaTime);
-			//transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * moveSpeed, Time.deltaTime * moveSmoothingFactor);
+            changeRatePerSecond *= 50;
+            moveSpeed = Mathf.MoveTowards(moveSpeed, moveTowards, changeRatePerSecond);
 
-			if (rb.velocity.magnitude < .01 && !hasHitWall) {
-				rb.velocity = Vector3.zero;
-				rb.angularVelocity = Vector3.zero;
-			}
+            //Boost
+            if (CInput.KeyDown(CInput.boost)) {
+                StartCoroutine(Boost());
+            }
 
-			//Exiting on dock
-			if ((CInput.KeyDown(CInput.enter)) && inDockArea) {
-				ControlsManager.instance.SwitchTo(ControlsManager.ControlEntity.Player);
-				MovePlayer(ControlsManager.instance.currentDock.GetPlrSpawnPos());
-				Dock dock = ControlsManager.instance.currentDock.GetComponent<Dock>();
-				Dock(dock.GetDockSpot(), dock.GetDockRot(), dock.GetPlrSpawnPos());
-			}
-		}
-	}
+            if (rb.velocity.magnitude < .01 && !hasHitWall) {
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
 
-	IEnumerator Boost() {
-		yield return new WaitForSeconds(0.35f);
-		maxSpeedF = turboSpeed;
-		accelerationSpeed = turboAccSpd;
-		yield return new WaitForSeconds(turboDuration);
-		maxSpeedF = normalMaxSpeedF;
-		accelerationSpeed = whenMovingAccSpd;
-	}
+            //Exiting on dock
+            if ((CInput.KeyDown(CInput.enter)) && inDockArea) {
+                ControlsManager.instance.SwitchTo(ControlsManager.ControlEntity.Player);
+                MovePlayer(ControlsManager.instance.currentDock.GetPlrSpawnPos());
+                Dock dock = ControlsManager.instance.currentDock.GetComponent<Dock>();
+                Dock(dock.GetDockSpot(), dock.GetDockRot(), dock.GetPlrSpawnPos());
+            }
+        }
+    }
+
+    IEnumerator Boost() {
+        yield return new WaitForSeconds(0.35f);
+        maxSpeedF = turboSpeed;
+        accelerationSpeed = turboAccSpd;
+        yield return new WaitForSeconds(turboDuration);
+        maxSpeedF = normalMaxSpeedF;
+        accelerationSpeed = whenMovingAccSpd;
+    }
 
     private void FixedUpdate() {
-		//Moving to new region
-		RaycastHit hit;
-		if (Physics.Raycast(transform.position, Vector3.down, out hit, 1000, regionLayer) && hit.transform.CompareTag("Region")) {
-			Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.black);
-			GameObject region = hit.transform.gameObject;
-			if (region != currentRegion) {
-				RegionManager.instance.SetCurrentRegion(region);
-				currentRegion = region;
-			}
-		}
+        //Moving to new region
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1000, regionLayer) && hit.transform.CompareTag("Region")) {
+            Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.black);
+            GameObject region = hit.transform.gameObject;
+            if (region != currentRegion) {
+                RegionManager.instance.SetCurrentRegion(region);
+                currentRegion = region;
+            }
+        }
 
-		//Ship rotation calculations and applying
-		RotateShip();
-		transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * moveSpeed, Time.deltaTime * moveSmoothingFactor);
-	}
+        //Ship rotation + movement calculations and applying
+        if (!turningFromBounce)
+            RotateShip();
+        transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * moveSpeed, Time.deltaTime * moveSmoothingFactor);
 
-	void RotateShip() {
-		//SOME FUCKERY GOING ON HERE???
-		Quaternion newRotX = Quaternion.Euler(Vector3.up * (Xcoord * Time.deltaTime));
-		Quaternion newRotY = Quaternion.Euler(Vector3.left * (Ycoord * Time.deltaTime));
-		float angle = transform.localEulerAngles.x;
-		angle = (angle > 180) ? angle - 360 : angle;
-		if ((angle > -70f && Ycoord >= 0) || (angle < 70f && Ycoord <= 0))
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, transform.rotation * newRotX * newRotY, sensitivity);
-		else
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, transform.rotation * newRotX, sensitivity);
-	}
+        //Speeder rotations after collision
+        if (turningFromBounce) {
+            float angle = Quaternion.Angle(transform.rotation, Quaternion.LookRotation(bounceDir));
+            if (angle > .1) {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(bounceDir), 10f);
+            } else {
+                turningFromBounce = false;
+                hasHitWall = false;
+            }
+        }
+    }
 
-	private void OnTriggerEnter(Collider other) {
-		//Docking
-		if (other.transform.CompareTag("Dock")) {
-			Dock dock = other.gameObject.GetComponent<Dock>();
-			ControlsManager.instance.SetCurrentDock(dock.GetComponent<Dock>());
-			Dock(dock.GetDockSpot(), dock.GetDockRot(), dock.GetPlrSpawnPos());
-			inDockArea = true;
-		}
+    void RotateShip() {
+        Quaternion newRotX = Quaternion.Euler(Vector3.up * (Xcoord * Time.deltaTime));
+        Quaternion newRotY = Quaternion.Euler(Vector3.left * (Ycoord * Time.deltaTime));
+        float angle = transform.localEulerAngles.x;
+        angle = (angle > 180) ? angle - 360 : angle;
+        if ((angle > -70f && Ycoord >= 0) || (angle < 70f && Ycoord <= 0))
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, transform.rotation * newRotX * newRotY, sensitivity);
+        else
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, transform.rotation * newRotX, sensitivity);
+    }
 
-		//Hitting Container/Gathering Resources
-		if (other.transform.CompareTag("Container")) {
-			ResourceManager.instance.AddResourcesRand(RegionManager.instance.GetCurrentRegionResource());
-			ContainerManager.instance.RemoveFromActiveContainers(other.gameObject);
-			Destroy(other.gameObject);
-		}
-	}
-	
-	private void OnTriggerExit(Collider other) {
-		if (other.transform.CompareTag("Dock")) {
-			inDockArea = false;
-		}
-	}
+    private void OnTriggerEnter(Collider other) {
+        //Docking
+        if (other.transform.CompareTag("Dock")) {
+            Dock dock = other.gameObject.GetComponent<Dock>();
+            ControlsManager.instance.SetCurrentDock(dock.GetComponent<Dock>());
+            Dock(dock.GetDockSpot(), dock.GetDockRot(), dock.GetPlrSpawnPos());
+            inDockArea = true;
+        }
+
+        //Hitting Container/Gathering Resources
+        if (other.transform.CompareTag("Container")) {
+            ResourceManager.instance.AddResourcesRand(RegionManager.instance.GetCurrentRegionResource());
+            ContainerManager.instance.RemoveFromActiveContainers(other.gameObject);
+            Destroy(other.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (other.transform.CompareTag("Dock")) {
+            inDockArea = false;
+        }
+    }
 
     private void OnCollisionEnter(Collision collision) {
-		//Hitting Walls/Obstacles
-		hasHitWall = true;
-		bounceDir = Vector3.Reflect(transform.forward, collision.contacts[0].normal);
-		rb.AddForce(bounceDir * moveSpeed * 0.5f, ForceMode.Impulse);		
-		Debug.DrawRay(transform.position, bounceDir * 10, Color.blue, 1f);
-		StartCoroutine(InCollision());
-	}
-
-	IEnumerator InCollision() {
-		yield return new WaitForSeconds(0.02f);
-		transform.rotation = Quaternion.LookRotation(bounceDir);
-		yield return new WaitForSeconds(2f);
-		hasHitWall = false;
+        //Hitting Walls/Obstacles
+        hasHitWall = true;
+        rb.velocity = Vector3.zero;
+        bounceDir = Vector3.Reflect(transform.forward, collision.GetContact(0).normal);
+        rb.AddForce(bounceDir * moveSpeed * bounceFactor, ForceMode.Impulse);
+        Debug.DrawRay(transform.position, bounceDir * 10, Color.blue, 1f);
+        turningFromBounce = true;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(bounceDir), 10f);
     }
 
     int firstDock = 0;
-	void Dock(Vector3 dockPos, Quaternion dockRot, Vector3 plrSpawnPos) {
-		if (firstDock > 0) {
-			ControlsManager.instance.Dock(dockPos, dockRot, plrSpawnPos);
-			moveSpeed = 0;
-		} else {
-			firstDock++;
-		}
-	}
+    void Dock(Vector3 dockPos, Quaternion dockRot, Vector3 plrSpawnPos) {
+        if (firstDock > 0) {
+            ControlsManager.instance.Dock(dockPos, dockRot, plrSpawnPos);
+            moveSpeed = 0;
+        } else {
+            firstDock++;
+        }
+    }
 
-	public void MovePlayer(Vector3 pos) {
-		player.SetActive(true);
-		player.transform.position = pos;
-	}
+    public void MovePlayer(Vector3 pos) {
+        player.SetActive(true);
+        player.transform.position = pos;
+    }
 
-	private void OnGUI() {
-		GUI.Label(new Rect(10, 70, 100, 20), "Speed: " + moveSpeed);
-		GUI.Label(new Rect(10, 90, 200, 20), "X = " + Xcoord);
-		GUI.Label(new Rect(10, 110, 200, 20), "Y = " + Ycoord);
-	}
+    private void OnGUI() {
+        GUI.Label(new Rect(10, 70, 100, 20), "Speed: " + moveSpeed);
+        GUI.Label(new Rect(10, 90, 200, 20), "X = " + Xcoord);
+        GUI.Label(new Rect(10, 110, 200, 20), "Y = " + Ycoord);
+    }
 }
