@@ -27,7 +27,11 @@ public class ShipNPC : MonoBehaviour {
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, destination, moveSpeed);
 
             Vector3 lookDir = (destination - transform.localPosition).normalized;
-            Quaternion lookRot = Quaternion.LookRotation(lookDir);
+            Quaternion lookRot = Quaternion.identity;
+            if (lookDir != Vector3.zero) {
+                lookRot = Quaternion.LookRotation(lookDir);
+            }
+            
             transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, Time.deltaTime * turnSpeed);
             transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
         }

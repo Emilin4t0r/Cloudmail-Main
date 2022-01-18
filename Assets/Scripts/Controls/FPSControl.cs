@@ -22,14 +22,16 @@ public class FPSControl : MonoBehaviour {
         rb = transform.GetComponent<Rigidbody>();
     }
 
-    void Update() {
+    void Update() {/*
         LookRotations();
         Jumping();
-        Movement();
+        Movement();*/
     }
 
     private void FixedUpdate() {
-        //Movement();
+        LookRotations();
+        Jumping();
+        Movement();
     }
 
 

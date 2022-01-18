@@ -6,12 +6,11 @@ using CustomInput;
 public class Speeder3D : MonoBehaviour {
     public float moveSpeed;
     public float maxSpeedF;
-    public float maxSpeedB;
     public float turboSpeed;
     public float turboCamShake;
     public float sensitivity;
     public float moveSmoothingFactor;
-    public float bounceFactor = 5.5f;
+    public float bounceFactor = 1f;
     public Rigidbody rb;
 
     public float accelerationSpeed;
@@ -43,10 +42,10 @@ public class Speeder3D : MonoBehaviour {
         canMove = true;
         normalMaxSpeedF = maxSpeedF; // Store normal speed & acceleration values
         accelerationSpeed = 0;
+        moveSpeed = 0;
     }
 
     void Update() {
-
         if (canMove) {
 
             blockX = Screen.width / 100f;
@@ -61,7 +60,7 @@ public class Speeder3D : MonoBehaviour {
             transform.localEulerAngles = new Vector3(x, y, 0);  // /
 
 
-            //Acceleration for moving forward/backward
+            //Acceleration for moving forward
             float moveTowards = 0;
             float changeRatePerSecond = 1 / accelerationSpeed * Time.deltaTime;
 
@@ -76,16 +75,17 @@ public class Speeder3D : MonoBehaviour {
             moveSpeed = Mathf.MoveTowards(moveSpeed, moveTowards, changeRatePerSecond);
 
             //Boost
-            if (CInput.KeyDown(CInput.boost)) {
+            //To be replaced with cloud boost feature
+            /*if (CInput.KeyDown(CInput.boost)) {
                 StartCoroutine(Boost());
-            }
+            }*/
 
             if (rb.velocity.magnitude < .01 && !hasHitWall) {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }
 
-            //Exiting on dock
+            //Exiting speeder in dock
             if ((CInput.KeyDown(CInput.enter)) && inDockArea) {
                 ControlsManager.instance.SwitchTo(ControlsManager.ControlEntity.Player);
                 MovePlayer(ControlsManager.instance.currentDock.GetPlrSpawnPos());
@@ -178,14 +178,10 @@ public class Speeder3D : MonoBehaviour {
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(bounceDir), 10f);
     }
 
-    int firstDock = 0;
+    //int firstDock = 0;
     void Dock(Vector3 dockPos, Quaternion dockRot, Vector3 plrSpawnPos) {
-        if (firstDock > 0) {
-            ControlsManager.instance.Dock(dockPos, dockRot, plrSpawnPos);
-            moveSpeed = 0;
-        } else {
-            firstDock++;
-        }
+        ControlsManager.instance.Dock(dockPos, dockRot, plrSpawnPos);
+        moveSpeed = 0;
     }
 
     public void MovePlayer(Vector3 pos) {

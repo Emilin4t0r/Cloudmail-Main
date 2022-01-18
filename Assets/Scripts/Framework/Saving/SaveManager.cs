@@ -22,6 +22,7 @@ public class SaveManager : MonoBehaviour {
          * ship upgrades
          * cosmetics
          * current world
+         * dock if docked to one when quitting
          */
 
         return save;

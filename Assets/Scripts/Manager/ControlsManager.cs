@@ -24,31 +24,45 @@ public class ControlsManager : MonoBehaviour {
 
     public float dDist, dAngle;
 
-    private void Start() {
+    private void Awake() {
         instance = this;
+    }
+
+    private void Start() {        
         plrCtrl = player.GetComponent<FPSControl>();
         spdrCtrl = speeder.GetComponent<Speeder3D>();
-        SwitchTo(controlEntity);
+        SwitchTo(controlEntity);        
     }
 
     public void SwitchTo(ControlEntity entity) {
         if (entity == ControlEntity.Ship) {
             plrCtrl.enabled = false;
-            spdrCtrl.enabled = true;
+            StartCoroutine(SpdrAnimWaiter());
             CameraManager.instance.SetCamParentToShip(true);
-            compass.SetActive(true);
-            isDocked = false;
+            compass.SetActive(true);            
             controlEntity = ControlEntity.Ship;
             InteractRay.instance.ResetLookingAt();
             ChangeCursorLockState(CursorLockMode.None);
-        } else if (entity == ControlEntity.Player) {
-            plrCtrl.enabled = true;
+            isDocked = false;
+        } else if (entity == ControlEntity.Player) {            
             spdrCtrl.enabled = false;
+            StartCoroutine(PlrAnimWaiter());
             CameraManager.instance.SetCamParentToShip(false);
             compass.SetActive(false);
             controlEntity = ControlEntity.Player;
             ChangeCursorLockState(CursorLockMode.Locked);
         }
+    }
+
+    IEnumerator SpdrAnimWaiter() {
+        yield return new WaitForSeconds(0.5f);
+        spdrCtrl.enabled = true;
+        spdrCtrl.canMove = true;
+    }
+
+    IEnumerator PlrAnimWaiter() {
+        yield return new WaitForSeconds(0.0f);
+        plrCtrl.enabled = true;
     }
 
     void ChangeCursorLockState(CursorLockMode mode) {
@@ -80,31 +94,33 @@ public class ControlsManager : MonoBehaviour {
             dDist = Vector3.Distance(speeder.transform.position, dockingPoint);
             dAngle = Quaternion.Angle(speeder.transform.rotation, dockingRot);
             speeder.transform.position = Vector3.MoveTowards(speeder.transform.position, dockingPoint, dDist / 10);
-            speeder.transform.rotation = Quaternion.RotateTowards(speeder.transform.rotation, dockingRot, dAngle / 10);
-            if (dDist < 0.1f) {
+            speeder.transform.rotation = Quaternion.RotateTowards(speeder.transform.rotation, dockingRot, dAngle / 20);
+            if (dAngle < 0.1f) {
                 EndDocking();
-            } else if (dDist < 1f && controlEntity != ControlEntity.Player) {
+            } else if (dAngle < 5f && controlEntity != ControlEntity.Player) {
                 spdrCtrl.MovePlayer(playerSpawnPosition);
                 player.transform.parent = currentDock.transform.parent.transform.parent; //set player parent as ShipRotator
                 SwitchTo(ControlEntity.Player);
             }
             if (Time.time > dockingTimer) {
                 EndDocking();
+                if (controlEntity != ControlEntity.Player) {
+                    spdrCtrl.MovePlayer(playerSpawnPosition);
+                    player.transform.parent = currentDock.transform.parent.transform.parent; //set player parent as ShipRotator
+                    SwitchTo(ControlEntity.Player);
+                }
             }
         }
 
         if (isDocked) {
             speeder.transform.position = currentDock.GetDockSpot();
-            speeder.transform.rotation = currentDock.GetDockRot();
-            /*if (sTilt.tiltAmt != 0) {
-                sTilt.tiltAmt = 0;
-            }*/
+            speeder.transform.rotation = currentDock.GetDockRot();            
         }
     }
 
     void EndDocking() {
         docking = false;
-        spdrCtrl.canMove = true;
+        spdrCtrl.canMove = false;
         spdrCtrl.rb.velocity = Vector3.zero;
         spdrCtrl.rb.angularVelocity = Vector3.zero;
         speeder.transform.rotation = dockingRot;
@@ -123,6 +139,6 @@ public class ControlsManager : MonoBehaviour {
         playerSpawnPosition = plrSpawnPos;
         spdrCtrl.rb.velocity = Vector3.zero;
         spdrCtrl.rb.angularVelocity = Vector3.zero;
-        dockingTimer = Time.time + 2f;
+        dockingTimer = Time.time + 1.5f;
     }
 }
