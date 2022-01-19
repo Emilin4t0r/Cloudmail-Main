@@ -72,6 +72,9 @@ public class Speeder3D : MonoBehaviour {
             }
 
             changeRatePerSecond *= 50;
+
+            if (changeRatePerSecond == Mathf.Infinity) { changeRatePerSecond = 0; } //Safeguard for when speeder is first entered and changeRatePerSecond is (incorrectly) infinite
+
             moveSpeed = Mathf.MoveTowards(moveSpeed, moveTowards, changeRatePerSecond);
 
             //Boost

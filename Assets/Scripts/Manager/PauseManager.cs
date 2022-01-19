@@ -18,10 +18,13 @@ public class PauseManager : MonoBehaviour {
             pauseMenu.SetActive(true);
             controlsManager.enabled = false;
             Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            controlsManager.PauseGame(true);
         } else {
             pauseMenu.SetActive(false);
             controlsManager.enabled = true;
             Cursor.lockState = controlsManager.cursorMode;
+            controlsManager.PauseGame(false);
         }
     }
 }

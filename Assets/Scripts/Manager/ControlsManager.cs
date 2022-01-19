@@ -34,6 +34,14 @@ public class ControlsManager : MonoBehaviour {
         SwitchTo(controlEntity);        
     }
 
+    public void PauseGame(bool state) {
+        if (controlEntity == ControlEntity.Player) {
+            plrCtrl.enabled = !state;
+        } else if (controlEntity == ControlEntity.Ship) {
+            spdrCtrl.enabled = !state;
+        }        
+    }
+
     public void SwitchTo(ControlEntity entity) {
         if (entity == ControlEntity.Ship) {
             plrCtrl.enabled = false;
