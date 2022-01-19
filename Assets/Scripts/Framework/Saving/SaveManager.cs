@@ -20,6 +20,7 @@ public class SaveManager : MonoBehaviour {
         /* THINGS TO SAVE:
          * days spent
          * ship upgrades
+         * ship health
          * cosmetics
          * current world
          * dock if docked to one when quitting
@@ -48,6 +49,8 @@ public class SaveManager : MonoBehaviour {
             file.Close();
 
             rm.SetAmts(save._r_amts);
+        } else {
+            SaveGame(slot);
         }
     }
 }

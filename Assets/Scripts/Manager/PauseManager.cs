@@ -7,13 +7,19 @@ public class PauseManager : MonoBehaviour {
     public GameObject pauseMenu;
     public ControlsManager controlsManager;
 
+    public static PauseManager instance;
+
+    private void Awake() {
+        instance = this;
+    }
+
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             TogglePause();
         }
     }
 
-    void TogglePause() {
+    public void TogglePause() {
         if (!pauseMenu.activeSelf) {
             pauseMenu.SetActive(true);
             controlsManager.enabled = false;

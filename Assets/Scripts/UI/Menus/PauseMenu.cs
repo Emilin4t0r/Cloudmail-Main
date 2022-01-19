@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
 
-    public GameObject options, saveSlots, main;
+    public GameObject options, main;
 
 
     public void Return() {
-        gameObject.SetActive(false);
+        PauseManager.instance.TogglePause();
     }
 
     public void OpenOptionsMenu() {
@@ -19,14 +19,13 @@ public class PauseMenu : MonoBehaviour {
         }
     }
 
-    public void OpenSaveSlots() {
-        if (!saveSlots.activeSelf) {
-            saveSlots.SetActive(true);
-            main.SetActive(false);
-        }
+    public void SaveGame() {
+        SaveUIController.instance.SaveGame();        
     }
     
     public void MainMenu() {
-        SceneManager.LoadScene("MainMenu");
+        //Reset all lingering save data in case a new save is started back in main menu
+        ResourceManager.instance.ResetAmounts();
+        SceneManager.LoadScene("MainMenu");        
     }
 }

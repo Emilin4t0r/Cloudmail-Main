@@ -13,6 +13,12 @@ public class MainMenu : MonoBehaviour {
             gameObject.SetActive(false);
         }
     }
+    public void BackBtn() {
+        if (saveSlots.activeSelf) {
+            saveSlots.SetActive(false);
+            gameObject.SetActive(true);
+        }
+    }
 
     public void OpenOptionsMenu() {
         if (!options.activeSelf) {
