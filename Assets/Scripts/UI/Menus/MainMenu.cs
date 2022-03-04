@@ -3,31 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour {
+public class MainMenu : MonoBehaviour
+{
 
     public GameObject options, saveSlots;
 
-    public void StartBtn() {
-        if (!saveSlots.activeSelf) {
+    public void StartBtn()
+    {
+        if (!saveSlots.activeSelf)
+        {
             saveSlots.SetActive(true);
             gameObject.SetActive(false);
         }
     }
-    public void BackBtn() {
-        if (saveSlots.activeSelf) {
+    public void BackBtn()
+    {
+        gameObject.SetActive(true);
+        if (saveSlots.activeSelf)
             saveSlots.SetActive(false);
-            gameObject.SetActive(true);
-        }
+        if (options.activeSelf)
+            options.SetActive(false);
     }
 
-    public void OpenOptionsMenu() {
-        if (!options.activeSelf) {
+    public void OpenOptionsMenu()
+    {
+        if (!options.activeSelf)
+        {
             options.SetActive(true);
             gameObject.SetActive(false);
         }
     }
 
-    public void QuitGame() {
+    public void QuitGame()
+    {
         Application.Quit();
     }
 }

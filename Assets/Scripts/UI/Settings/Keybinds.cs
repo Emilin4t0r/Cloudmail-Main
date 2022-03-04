@@ -5,9 +5,8 @@ using CustomInput;
 
 public class Keybinds : MonoBehaviour {
     public string[] keyCodes;
-    bool settingAKey;
 
-    private void Awake() {
+    private void Start() {
         SetCodes();
     }
 

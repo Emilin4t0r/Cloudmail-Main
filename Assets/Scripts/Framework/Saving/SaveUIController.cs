@@ -22,10 +22,6 @@ public class SaveUIController : MonoBehaviour {
         SceneManager.LoadScene("3DFlying");
     }
 
-    private void Update() {
-        print(slotNmbr);
-    }
-
     public void SaveGame() {
         if (slotNmbr != 0) {
             SaveManager.instance.SaveGame(slotNmbr);

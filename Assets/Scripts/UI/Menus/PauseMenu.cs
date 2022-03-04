@@ -20,7 +20,8 @@ public class PauseMenu : MonoBehaviour {
     }
 
     public void SaveGame() {
-        SaveUIController.instance.SaveGame();        
+        SaveUIController.instance.SaveGame();
+        print("Game save successfully!");
     }
     
     public void MainMenu() {

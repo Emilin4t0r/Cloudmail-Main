@@ -50,7 +50,7 @@ public class ControlsManager : MonoBehaviour {
             compass.SetActive(true);            
             controlEntity = ControlEntity.Ship;
             InteractRay.instance.ResetLookingAt();
-            ChangeCursorLockState(CursorLockMode.None);
+            ChangeCursorLockState(CursorLockMode.Confined);
             isDocked = false;
         } else if (entity == ControlEntity.Player) {            
             spdrCtrl.enabled = false;

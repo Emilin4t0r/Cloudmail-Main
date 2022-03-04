@@ -18,8 +18,8 @@ public class SpeederTilt : MonoBehaviour {
             }
         }
 
-        float x = 0;
-        float y = 0;
-        transform.localEulerAngles = new Vector3(x, y, -tiltAmt);
+        Quaternion tiltRot = Quaternion.Euler(0, 0, -tiltAmt);
+        float dist = Quaternion.Angle(transform.localRotation, tiltRot);
+        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, tiltRot, 0.05f * dist);        
     }
 }
